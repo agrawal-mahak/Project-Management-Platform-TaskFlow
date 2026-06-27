@@ -8,11 +8,13 @@ export interface CardLabel {
 }
 
 export interface Card {
-  id: string;         // e.g. "ERP-885"
+  id: string;              // e.g. "ERP-885"
   title: string;
+  status: string;          // 'draft' | 'todo' | 'inprogress' | 'intest' | 'done'
+  priority: string;        // 'easy' | 'medium' | 'high' | 'urgent'
+  dueDate?: string;        // ISO date string "YYYY-MM-DD"
   label?: CardLabel;
   category?: string;
-  dueDate?: string;   // e.g. "Oct 14, 2025"
   isOverdue?: boolean;
   assigneeInitials?: string;
   assigneeColor?: string;
@@ -22,6 +24,14 @@ export interface Card {
 export interface Column {
   id: string;
   title: string;
-  count?: number;     // shown next to the title
   cards: Card[];
+}
+
+// ── Form data (used by react-hook-form) ──
+export interface TaskFormData {
+  taskNo: string;
+  title: string;
+  status: string;
+  priority: string;
+  dueDate: string;
 }

@@ -60,6 +60,27 @@
 }
 .modal-close-btn:hover { background: var(--border-light); color: var(--text-heading); }
 
+/* Delete button in header */
+.modal-delete-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(248,113,104,0.35);
+  color: var(--accent-red);
+  font-size: 12px;
+  font-weight: 500;
+  background: transparent;
+  transition: background 0.15s, border-color 0.15s;
+}
+.modal-delete-btn:hover { background: rgba(248,113,104,0.12); border-color: var(--accent-red); }
+
+/* Input validation error state */
+.form-input.input-error { border-color: var(--accent-red); }
+.field-error { font-size: 11px; color: var(--accent-red); margin-top: 2px; }
+
+
 /* ── Modal Body ── */
 .modal-body {
   padding: 20px;

@@ -433,3 +433,44 @@
 .card-assignee {
   margin-left: auto;
 }
+
+/* ── Card hover action bar ── */
+.kanban-card {
+  position: relative; /* needed for absolute action bar */
+}
+
+.card-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 1;
+}
+.kanban-card:hover .card-actions { opacity: 1; }
+
+.card-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-col);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  transition: background 0.12s, color 0.12s;
+}
+.card-action-btn:hover { background: var(--border-light); color: var(--text-heading); }
+.card-action-btn--delete:hover { background: rgba(248,113,104,0.15); color: var(--accent-red); border-color: var(--accent-red); }
+
+/* Priority dot */
+.card-priority-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
