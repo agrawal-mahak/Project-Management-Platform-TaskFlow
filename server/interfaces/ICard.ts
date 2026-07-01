@@ -1,9 +1,11 @@
-import type { Document, Types } from "mongoose";
+import type { Document } from "mongoose";
 
 export interface ICard extends Document {
-  title: string;
-  description?: string;
-  listId: Types.ObjectId;
-  position: number;
-  createdAt: Date;
+  taskNo:     number;
+  taskName:   string;
+  status:     string;
+  priority:   string;
+  startDate:  Date;
+  endDate:    Date;
+  assignedTo: string;
 }

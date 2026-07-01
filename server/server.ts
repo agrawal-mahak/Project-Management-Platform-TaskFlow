@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import { connectDB } from "./config/db.js";
-import boardRoutes from "./routes/boardRoutes.js";
+import cardRoutes from "./routes/cardRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -14,7 +14,7 @@ app.use(morgan("dev")); // HTTP request logger
 app.use(express.json());
 
 // Routes
-app.use("/api/boards", boardRoutes);
+app.use("/api/cards", cardRoutes);
 
 
 const PORT = process.env.PORT || 5000;
