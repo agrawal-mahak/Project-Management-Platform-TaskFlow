@@ -64,10 +64,33 @@ export const createBoard = async (req: Request, res: Response) => {
         const newBoard = new Board(req.body);
         await newBoard.save();
         console.log(`[POST /api/boards] Board created successfully → ID: ${newBoard._id}`);
-        res.status(201).json(newBoard);
-    } catch (error) {
-        console.error(`[POST /api/boards] Error:`, error);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(201).json(newBoard);
+    } catch (error: any) {
+        // Handle Mongoose Validation and Casting Errors
+        if (error.name === "ValidationError") {
+            const errors = Object.keys(error.errors).map(key => {
+                const errorDetails = error.errors[key];
+                
+                // If it's a CastError (e.g., sending a string to a number field)
+                if (errorDetails.name === "CastError") {
+                    return {
+                        field: key,
+                        message: `${key} must be a valid ${errorDetails.kind}`
+                    };
+                }
+                
+                // Standard required/custom validation messages
+                return {
+                    field: key,
+                    message: errorDetails.message
+                };
+            });
+            
+            return res.status(400).json({ message: "Validation failed", errors });
+        }
+
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error" });
     }
 }
 
