@@ -3,7 +3,17 @@ import Board from '../models/Board.js'; // Clean ES Module import
 
 export const getBoards = async (req: Request, res: Response) => {
     try {
-        const boards = await Board.find();
+        const {search} = req.query;
+
+        let query = {};
+        if (search){
+            query = {taskName: {$regex: search, $options: 'i'}}
+        }
+        const boards = await Board.find(query);
+
+        if (boards.length ===0){
+            return res.status(400).json({message: "No boards found"})
+        }
         res.status(200).json(boards);
     } catch (error) {
         console.error(error);
