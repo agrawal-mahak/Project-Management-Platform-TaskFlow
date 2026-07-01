@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import morgan from "morgan";
 import { connectDB } from "./config/db.js";
 import boardRoutes from "./routes/boardRoutes.js";
 
@@ -9,6 +10,7 @@ connectDB();
 const app = express();
 
 // Middleware
+app.use(morgan("dev")); // HTTP request logger
 app.use(express.json());
 
 // Routes
