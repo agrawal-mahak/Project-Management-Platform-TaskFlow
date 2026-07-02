@@ -1,22 +1,23 @@
-import type { Card, Column } from '../types';
+import type { Card } from '../types';
 import KanbanCard from './KanbanCard';
 
 interface Props {
-  column: Column;
+  column:       { id: string; title: string };
+  cards:        Card[];
   onCardEdit:   (card: Card) => void;
   onCardDelete: (cardId: string) => void;
   onAddCard:    (columnId: string) => void;
 }
 
-const KanbanColumn = ({ column, onCardEdit, onCardDelete, onAddCard }: Props) => {
+const KanbanColumn = ({ column, cards, onCardEdit, onCardDelete, onAddCard }: Props) => {
   return (
     <div className="kanban-column">
       {/* Column header */}
       <div className="column-header">
         <div className="column-title">
           {column.title}
-          {column.cards.length > 0 && (
-            <span className="column-count">{column.cards.length}</span>
+          {cards.length > 0 && (
+            <span className="column-count">{cards.length}</span>
           )}
         </div>
         <button className="column-more-btn nav-icon-btn" title="Column options">
@@ -30,7 +31,7 @@ const KanbanColumn = ({ column, onCardEdit, onCardDelete, onAddCard }: Props) =>
 
       {/* Cards */}
       <div className="column-cards">
-        {column.cards.map(card => (
+        {cards.map(card => (
           <KanbanCard
             key={card.id}
             card={card}

@@ -23,8 +23,16 @@ export const getCards = async (req: Request, res: Response) => {
         const cards = await Card.find(query).skip(skip).limit(limitNumber);
 
         if (cards.length === 0) {
-            console.log(`[GET /api/cards] No cards found`);
-            return res.status(400).json({ message: "No data found" });
+            console.log(`[GET /api/cards] No cards found — returning empty result`);
+            return res.status(200).json({
+                meta: {
+                    totalItems:  0,
+                    totalPages:  0,
+                    currentPage: pageNumber,
+                    limit:       limitNumber
+                },
+                data: []
+            });
         }
 
         console.log(`[GET /api/cards] Returning ${cards.length} cards (page ${pageNumber})`);
