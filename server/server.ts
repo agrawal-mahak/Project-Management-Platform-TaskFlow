@@ -3,11 +3,16 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import { connectDB } from "./config/db.js";
 import cardRoutes from "./routes/cardRoutes.js";
+import cors from "cors";
 
 dotenv.config();
 connectDB();
 
 const app = express();
+
+app.use(cors({
+    origin: "http://localhost:5173",
+}));
 
 // Middleware
 app.use(morgan("dev")); // HTTP request logger

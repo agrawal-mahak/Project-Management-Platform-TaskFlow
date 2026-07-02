@@ -40,4 +40,6 @@ const CardSchema = new Schema<ICard>({
     },
 });
 
-export default model<ICard>("Card", CardSchema);
+// Third argument locks this model to the existing 'boards' collection
+// so no data migration is needed
+export default model<ICard>("Card", CardSchema, "boards");
