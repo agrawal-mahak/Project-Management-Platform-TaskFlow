@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getCards, createCard, getCardById, deleteCard } from "../controllers/cardController.js";
+import { getCards, createCard, getCardById, deleteCard, updateCard } from "../controllers/cardController.js";
 
 const router = Router();
 
@@ -14,5 +14,8 @@ router.post("/", createCard);
 
 // DELETE /api/cards/:cardId → delete a card
 router.delete("/:cardId", deleteCard);
+
+// PUT /api/cards/:cardId → update a card
+router.put("/:cardId", updateCard);
 
 export default router;

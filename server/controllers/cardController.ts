@@ -112,3 +112,33 @@ export const deleteCard = async (req: Request, res: Response) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+export const updateCard = async (req: Request, res: Response) => {
+    try {
+        const { cardId } = req.params;
+        const { taskNo, status, taskName, priority, startDate, endDate, assignedTo } = req.body;
+
+        const updatedCard = await Card.findByIdAndUpdate(
+            cardId,
+            {
+                taskNo,
+                status,
+                taskName,
+                priority,
+                startDate,
+                endDate,
+                assignedTo
+            },
+            { new: true, runValidators: true }
+        );
+        if(!updatedCard){
+            return res.status(404).json({message:"Card not found"})
+        }
+        return res.status(200).json({message:"Card updated successfully"})
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+
+    }
+}
