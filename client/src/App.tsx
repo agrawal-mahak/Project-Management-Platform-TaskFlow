@@ -1,10 +1,13 @@
 import { useState } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/Navbar';
 import ProjectHeader from './components/ProjectHeader';
 import BoardToolbar from './components/BoardToolbar';
 import BoardPage from './pages/BoardPage';
 import CreateTaskModal from './components/CreateTaskModal';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 import type { Card, Column, TaskFormData } from './types';
 
 // ── Column ID ↔ Status value mapping ──
@@ -136,7 +139,8 @@ function App() {
     };
   };
 
-  return (
+  /* ── Board view (rendered as the index route) ── */
+  const BoardView = () => (
     <>
       <Navbar onCreateClick={() => openCreateModal()} />
       <ProjectHeader />
@@ -175,6 +179,15 @@ function App() {
         />
       )}
     </>
+  );
+
+  return (
+    <Routes>
+      <Route path="/login"  element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/"       element={<BoardView />} />
+      <Route path="*"       element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 
