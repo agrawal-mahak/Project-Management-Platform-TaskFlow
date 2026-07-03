@@ -1,8 +1,9 @@
 import type { Document } from "mongoose";
 
 export interface IUser extends Document {
-  name: string;
-  email: string;
-  password: string;
-  createdAt: Date;
+  name:      string;
+  email:     string;
+  password:  string;
+  createdAt: Date;   // added by Mongoose { timestamps: true }
+  updatedAt: Date;   // added by Mongoose { timestamps: true }
 }

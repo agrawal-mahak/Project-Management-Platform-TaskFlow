@@ -4,6 +4,7 @@ import morgan from "morgan";
 import { connectDB } from "./config/db.js";
 import cardRoutes from "./routes/cardRoutes.js";
 import cors from "cors";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -20,6 +21,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/cards", cardRoutes);
+app.use("/api/auth", authRoutes);
 
 
 const PORT = process.env.PORT || 5000;
