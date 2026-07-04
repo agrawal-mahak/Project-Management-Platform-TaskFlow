@@ -1,13 +1,35 @@
-// Team members shown in the avatar stack
-const TEAM = [
-  { initials: 'MA', color: '#c43c3c' },
-  { initials: 'EY', color: '#2d8a4e' },
-  { initials: 'LK', color: '#2d6ab0' },
-  { initials: 'MP', color: '#7b4eb0' },
-];
+import { useEffect, useState } from "react";
+
+import { fetchUsers } from "../api/authApi";
+
+
+
+const AVATAR_COLORS = ['#c43c3c', '#2d8a4e', '#2d6ab0', '#7b4eb0', '#f5cd47', '#f87168', '#4bce97'];
 
 const BoardToolbar = () => {
+  const [team, setTeam] = useState<{ _id: string; name: string; email: string }[]>([]);
+
+  useEffect(() => {
+    fetchUsers().then(setTeam).catch(console.error);
+  }, []);
+
+  const getInitials = (name: string) =>
+    name
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map(w => w[0].toUpperCase())
+      .join('');
+
+  const getAvatarColor = (name: string) => {
+    const hash = name
+      .split("")
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+
+    return AVATAR_COLORS[hash % AVATAR_COLORS.length];
+  };
   return (
+
     <div className="board-toolbar">
       {/* Search */}
       <div className="toolbar-search">
@@ -20,12 +42,16 @@ const BoardToolbar = () => {
 
       {/* Avatar stack */}
       <div className="avatar-stack">
-        {TEAM.map(member => (
-          <div key={member.initials} className="avatar" style={{ background: member.color }} title={member.initials}>
-            {member.initials}
-          </div>
-        ))}
-        <div className="avatar-more">+2</div>
+        {team.slice(0, 5).map(member => {
+          const initials = getInitials(member.name);
+          const color = getAvatarColor(member.name);
+          return (
+            <div key={member._id} className="avatar" style={{ background: color }} title={member.name}>
+              {initials}
+            </div>
+          );
+        })}
+        {team.length > 5 && <div className="avatar-more">+{team.length - 5}</div>}
       </div>
 
       {/* Filter */}

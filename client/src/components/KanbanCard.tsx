@@ -21,7 +21,7 @@ const PRIORITY_COLOR: Record<string, string> = {
 interface Props {
   card: Card;
   onEdit:   (card: Card) => void;
-  onDelete: (cardId: string) => void;
+  onDelete: (card: Card) => void;   // full card needed for _mongoId
 }
 
 const KanbanCard = ({ card, onEdit, onDelete }: Props) => {
@@ -31,12 +31,24 @@ const KanbanCard = ({ card, onEdit, onDelete }: Props) => {
     : null;
 
   const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // prevent card click (edit) from firing
-    onDelete(card.id);
+    e.stopPropagation();
+    onDelete(card);
+  };
+
+  // Drag: serialize full card so the drop target can call patchCardStatus
+  const handleDragStart = (e: React.DragEvent) => {
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', card._mongoId ?? '');
+    e.dataTransfer.setData('application/json', JSON.stringify(card));
   };
 
   return (
-    <div className="kanban-card" onClick={() => onEdit(card)}>
+    <div
+      className="kanban-card"
+      draggable
+      onDragStart={handleDragStart}
+      onClick={() => onEdit(card)}
+    >
 
       {/* ── Hover action bar (edit + delete) ── */}
       <div className="card-actions">

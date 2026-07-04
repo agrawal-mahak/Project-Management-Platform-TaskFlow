@@ -46,8 +46,8 @@ const Navbar = ({ onCreateClick }: Props) => {
         </button>
 
         <a href="#" className="navbar-logo">
-          <div className="logo-icon">J</div>
-          Jira
+          <div className="logo-icon">T</div>
+          TaskFlow
         </a>
       </div>
 

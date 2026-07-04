@@ -1,5 +1,7 @@
 import { useForm } from 'react-hook-form';
+import { useState, useEffect } from 'react';
 import type { TaskFormData } from '../types';
+import { fetchUsers } from '../api/authApi';
 import '../modal.css';
 
 // ── Static options ──
@@ -39,11 +41,12 @@ const CreateTaskModal = ({ mode, defaultValues, taskNumber, onClose, onSubmit, o
     formState: { errors },
   } = useForm<TaskFormData>({
     defaultValues: defaultValues ?? {
-      taskNo:   `ERP-${taskNumber ?? 1201}`,
-      title:    '',
-      status:   'todo',
-      priority: 'medium',
-      dueDate:  '',
+      taskNo:     `ERP-${taskNumber ?? 1201}`,
+      title:      '',
+      status:     'todo',
+      priority:   'medium',
+      dueDate:    '',
+      assignedTo: '',
     },
   });
 
@@ -57,6 +60,12 @@ const CreateTaskModal = ({ mode, defaultValues, taskNumber, onClose, onSubmit, o
   register('taskNo');
 
   const taskNo = watch('taskNo');
+
+  // ── Fetch users for dropdown ──
+  const [users, setUsers] = useState<{ _id: string; name: string; email: string }[]>([]);
+  useEffect(() => {
+    fetchUsers().then(setUsers).catch(console.error);
+  }, []);
 
   // Close when clicking the backdrop
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -181,6 +190,25 @@ const CreateTaskModal = ({ mode, defaultValues, taskNumber, onClose, onSubmit, o
                 type="date"
                 {...register('dueDate')}
               />
+            </div>
+
+            {/* Assigned To */}
+            <div className="form-field">
+              <label className="form-label" htmlFor="task-assigned">
+                Assigned To
+              </label>
+              <select
+                id="task-assigned"
+                className="form-input"
+                {...register('assignedTo')}
+              >
+                <option value="">Unassigned</option>
+                {users.map(user => (
+                  <option key={user._id} value={user.name}>
+                    {user.name} ({user.email})
+                  </option>
+                ))}
+              </select>
             </div>
 
           </div>

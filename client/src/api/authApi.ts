@@ -57,3 +57,9 @@ export const getUserFromStorage = (): { name: string; email: string } | null => 
     const raw = localStorage.getItem('user');
     return raw ? JSON.parse(raw) : null;
 }
+
+// fetch all users
+export const fetchUsers = async (): Promise<{ _id: string; name: string; email: string }[]> => {
+    const res = await axiosInstance.get('/auth/users');
+    return res.data;
+}

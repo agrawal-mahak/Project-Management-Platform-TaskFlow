@@ -8,16 +8,18 @@ export interface CardLabel {
 }
 
 export interface Card {
-  id: string;              // e.g. "ERP-885"
+  id: string;           // display ID — e.g. "ERP-885"
+  _mongoId?: string;    // MongoDB _id — used for update/delete API calls
   title: string;
-  status: string;          // 'draft' | 'todo' | 'inprogress' | 'intest' | 'done'
-  priority: string;        // 'easy' | 'medium' | 'high' | 'urgent'
-  dueDate?: string;        // ISO date string "YYYY-MM-DD"
+  status: string;       // 'draft' | 'todo' | 'inprogress' | 'revision' | 'intest' | 'done'
+  priority: string;     // 'easy' | 'medium' | 'high' | 'urgent'
+  dueDate?: string;     // ISO date string "YYYY-MM-DD"
   label?: CardLabel;
   category?: string;
   isOverdue?: boolean;
   assigneeInitials?: string;
   assigneeColor?: string;
+  assignedTo?: string;
 }
 
 // ── Column types ──
@@ -29,9 +31,10 @@ export interface Column {
 
 // ── Form data (used by react-hook-form) ──
 export interface TaskFormData {
-  taskNo: string;
-  title: string;
-  status: string;
-  priority: string;
-  dueDate: string;
+  taskNo:     string;
+  title:      string;
+  status:     string;
+  priority:   string;
+  dueDate:    string;
+  assignedTo: string;   // visible field in the Create/Edit modal
 }

@@ -167,3 +167,14 @@ export const getMe = async (req: Request, res: Response) => {
     }
 }
 
+// ── GET /api/auth/users — list all users (for dropdown) ─────────────────────
+export const getUsers = async (_req: Request, res: Response): Promise<void> => {
+    try {
+        // Return only safe fields — never the password hash
+        const users = await User.find({}).select('_id name email').lean();
+        res.status(200).json(users);
+    } catch (error) {
+        console.error("[getUsers]", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}

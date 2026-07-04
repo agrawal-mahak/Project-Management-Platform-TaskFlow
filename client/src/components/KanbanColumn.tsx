@@ -2,16 +2,48 @@ import type { Card } from '../types';
 import KanbanCard from './KanbanCard';
 
 interface Props {
-  column:       { id: string; title: string };
-  cards:        Card[];
-  onCardEdit:   (card: Card) => void;
-  onCardDelete: (cardId: string) => void;
-  onAddCard:    (columnId: string) => void;
+  column:               { id: string; title: string };
+  cards:                Card[];
+  onCardEdit:           (card: Card) => void;
+  onCardDelete:         (card: Card) => void;                         // full card (needs _mongoId)
+  onAddCard:            (columnId: string) => void;
+  onDragStatusChange?:  (card: Card, newStatus: string) => void;     // drag-and-drop save
 }
 
-const KanbanColumn = ({ column, cards, onCardEdit, onCardDelete, onAddCard }: Props) => {
+const KanbanColumn = ({
+  column, cards, onCardEdit, onCardDelete, onAddCard, onDragStatusChange,
+}: Props) => {
+
+  // ── Drag target: allow drop ────────────────────────────────────────────────
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  // ── Drop: find the dragged card and call status change ────────────────────
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const mongoId = e.dataTransfer.getData('text/plain');
+    if (!mongoId || !onDragStatusChange) return;
+
+    // We need the full card to send to patchCardStatus
+    // The card comes from a flat list, so we search all cards passed to this column
+    // The dragged card might not be in this column yet — the parent passes all cards
+    // We'll use a custom event to get the card data
+    const cardJson = e.dataTransfer.getData('application/json');
+    if (!cardJson) return;
+    const card: Card = JSON.parse(cardJson);
+    if (card.status !== column.id) {
+      onDragStatusChange(card, column.id);
+    }
+  };
+
   return (
-    <div className="kanban-column">
+    <div
+      className="kanban-column"
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+    >
       {/* Column header */}
       <div className="column-header">
         <div className="column-title">
