@@ -1,9 +1,37 @@
+import { useNavigate } from 'react-router-dom';
+import { logoutUser, getUserFromStorage } from '../api/authApi';
+import toast from 'react-hot-toast';
+
 interface Props {
   onCreateClick: () => void;
 }
 
-// Top navigation bar
+// Derive initials from a full name, e.g. "Jane Doe" → "JD"
+const getInitials = (name: string): string =>
+  name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(w => w[0].toUpperCase())
+    .join('');
+
+// Pick a consistent color from the name
+const AVATAR_COLORS = ['#c43c3c', '#2d8a4e', '#2d6ab0', '#7c3aed', '#b45309', '#0e7490'];
+const getAvatarColor = (name: string): string =>
+  AVATAR_COLORS[name.charCodeAt(0) % AVATAR_COLORS.length];
+
 const Navbar = ({ onCreateClick }: Props) => {
+  const navigate = useNavigate();
+  const user = getUserFromStorage();
+  const initials = user ? getInitials(user.name) : '?';
+  const avatarColor = user ? getAvatarColor(user.name) : '#596773';
+
+  const handleLogout = () => {
+    logoutUser();
+    toast.success('Logged out successfully');
+    navigate('/login');
+  };
+
   return (
     <nav className="navbar">
       {/* Left: grid icon + logo */}
@@ -34,7 +62,7 @@ const Navbar = ({ onCreateClick }: Props) => {
         </div>
       </div>
 
-      {/* Right: create + icons + avatar */}
+      {/* Right: create + icons + avatar + logout */}
       <div className="navbar-right">
         <button className="create-btn" onClick={onCreateClick}>
           <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
@@ -65,9 +93,31 @@ const Navbar = ({ onCreateClick }: Props) => {
           </svg>
         </button>
 
-        <div className="avatar" style={{ background: '#c43c3c' }} title="My Account">
-          MA
+        {/* Avatar — shows real user initials */}
+        <div
+          className="avatar"
+          style={{ background: avatarColor }}
+          title={user?.name ?? 'Account'}
+        >
+          {initials}
         </div>
+
+        {/* Logout button */}
+        {user && (
+          <button
+            id="navbar-logout-btn"
+            className="navbar-logout-btn"
+            onClick={handleLogout}
+            title="Log out"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            Logout
+          </button>
+        )}
       </div>
     </nav>
   );

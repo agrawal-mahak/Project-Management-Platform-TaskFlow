@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthLeftPanel from '../components/AuthLeftPanel';
 import './auth.css';
+import { registerUser } from '../api/authApi';
+import toast from 'react-hot-toast';
 
 interface SignupFormData {
   fullName: string;
@@ -56,12 +58,19 @@ const SignupPage = () => {
   const passwordValue = watch('password', '');
   const strength = getStrength(passwordValue);
 
-  const onSubmit = async (_data: SignupFormData) => {
+  const onSubmit = async (data: SignupFormData) => {
     setIsLoading(true);
-    // Simulate API call — replace with real auth call
-    await new Promise(r => setTimeout(r, 1200));
-    setIsLoading(false);
-    navigate('/');
+    try{
+      await registerUser(data.fullName,data.email,data.password);
+      toast.success('Registered successfully');
+      navigate('/login');
+    }
+    catch (error:any){
+      toast.error(error.response.data.message || 'Registration failed. Please try again.');
+    }
+    finally{
+      setIsLoading(false);
+    }
   };
 
   return (

@@ -113,6 +113,29 @@
   cursor: pointer;
 }
 
+/* Logout button in Navbar */
+.navbar-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.navbar-logout-btn:hover {
+  background: rgba(248, 113, 104, 0.12);
+  color: var(--accent-red);
+  border-color: var(--accent-red);
+}
+
 /* ── Project Header ── */
 .project-header {
   background: var(--bg-nav);

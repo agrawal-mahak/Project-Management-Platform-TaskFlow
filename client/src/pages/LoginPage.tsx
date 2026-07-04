@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthLeftPanel from '../components/AuthLeftPanel';
 import './auth.css';
+import toast from 'react-hot-toast';
+import { loginUser } from '../api/authApi';
 
 interface LoginFormData {
   email: string;
@@ -37,13 +39,24 @@ const LoginPage = () => {
     defaultValues: { email: '', password: '', remember: false },
   });
 
-  const onSubmit = async (_data: LoginFormData) => {
+  const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
-    // Simulate API call — replace with real auth call
-    await new Promise(r => setTimeout(r, 1000));
-    setIsLoading(false);
-    navigate('/');
-  };
+    try {
+      await loginUser(data.email,data.password);
+      toast.success('Logged in successfully');
+       navigate('/');
+    }
+    catch (error: any) {
+      toast.error(error.response.data.message || 'Something went wrong');
+    }
+    finally{
+      setIsLoading(false);
+    }
+  }
+
+  const forgotPassword = () => {
+    toast.error('Forgot password not implemented yet');
+  }
 
   return (
     <div className="auth-page">
@@ -165,7 +178,7 @@ const LoginPage = () => {
                 />
                 Remember me
               </label>
-              <Link to="/forgot-password" className="auth-forgot-link">Forgot password?</Link>
+              <Link to="" className="auth-forgot-link" onClick={()=>forgotPassword()}>Forgot password?</Link>
             </div>
 
             {/* Submit */}
