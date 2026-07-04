@@ -8,6 +8,19 @@ export interface AuthResponse {
         email: string,
     }
 }
+// ---------google authentication-----------
+export const googleLogin = async (credential: string): Promise<AuthResponse> => {
+    try {
+        const res = await axiosInstance.post<AuthResponse>('/auth/google', { credential });
+
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('user', JSON.stringify(res.data.user));
+        return res.data;
+    } catch (error) {
+        console.error("Google login error", error);
+        throw error;
+    }
+}
 
 // ----------Register user------------
 export const registerUser = async (name: string,
