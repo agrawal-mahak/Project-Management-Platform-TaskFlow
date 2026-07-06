@@ -12,6 +12,9 @@ import TeamPage from './pages/TeamPage';
 
 import { getUserFromStorage } from './api/authApi';
 
+import SummaryPage from './pages/SummaryPage';
+import CalendarPage from './pages/CalendarPage';
+
 /* ── Board view ── */
 const BoardView = () => {
   const user = getUserFromStorage();
@@ -49,6 +52,10 @@ const BoardView = () => {
             searchQuery={searchQuery}
           />
         </>
+      ) : activeTab === 'summary' ? (
+        <SummaryPage />
+      ) : activeTab === 'calendar' ? (
+        <CalendarPage />
       ) : (
         <EmptyTabView tabName={currentTabLabel} />
       )}
