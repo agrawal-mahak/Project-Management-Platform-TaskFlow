@@ -275,6 +275,53 @@
   transition: background 0.15s, color 0.15s;
 }
 .toolbar-btn:hover { background: var(--border-light); color: var(--text-heading); }
+.toolbar-btn.active { background: rgba(87,157,255,0.15); color: #579dff; border-color: #579dff; }
+
+/* Filter Dropdown */
+.filter-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 220px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  padding: 8px 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+.filter-dropdown-header {
+  padding: 4px 12px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+.filter-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+  color: var(--text-primary);
+  font-size: 13px;
+}
+.filter-item:hover {
+  background: var(--bg-card-hover);
+}
+.filter-item.selected {
+  background: rgba(87,157,255,0.1);
+}
+.filter-item .avatar {
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
+}
 
 .toolbar-spacer { flex: 1; }
 

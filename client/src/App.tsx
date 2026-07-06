@@ -18,6 +18,8 @@ const BoardView = () => {
   const isManager = user?.role === 'manager' || user?.role === 'admin';
   const isAdmin = user?.role === 'admin';
   const [activeTab, setActiveTab] = useState('board');
+  const [filterAssignee, setFilterAssignee] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const currentTabLabel = TABS.find(t => t.id === activeTab)?.label || 'Unknown';
 
@@ -36,8 +38,16 @@ const BoardView = () => {
       
       {activeTab === 'board' ? (
         <>
-          <BoardToolbar />
-          <BoardPage isManager={isManager} />
+          <BoardToolbar 
+            filterAssignee={filterAssignee} 
+            onFilterChange={setFilterAssignee} 
+            onSearchChange={setSearchQuery} 
+          />
+          <BoardPage 
+            isManager={isManager} 
+            filterAssignee={filterAssignee} 
+            searchQuery={searchQuery}
+          />
         </>
       ) : (
         <EmptyTabView tabName={currentTabLabel} />

@@ -1,35 +1,31 @@
 import { useEffect, useState } from "react";
 
 import { fetchUsers } from "../api/authApi";
+import { getAvatarColor, getInitials } from "../utils/helpers";
 
+interface BoardToolbarProps {
+  filterAssignee?: string | null;
+  onFilterChange: (assignee: string | null) => void;
+  onSearchChange: (search: string) => void;
+}
 
-
-const AVATAR_COLORS = ['#c43c3c', '#2d8a4e', '#2d6ab0', '#7b4eb0', '#f5cd47', '#f87168', '#4bce97'];
-
-const BoardToolbar = () => {
+const BoardToolbar = ({ filterAssignee, onFilterChange, onSearchChange }: BoardToolbarProps) => {
   const [team, setTeam] = useState<{ _id: string; name: string; email: string }[]>([]);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [localSearch, setLocalSearch] = useState('');
 
   useEffect(() => {
     fetchUsers().then(setTeam).catch(console.error);
   }, []);
 
-  const getInitials = (name: string) =>
-    name
-      .split(' ')
-      .filter(Boolean)
-      .slice(0, 2)
-      .map(w => w[0].toUpperCase())
-      .join('');
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onSearchChange(localSearch);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [localSearch, onSearchChange]);
 
-  const getAvatarColor = (name: string) => {
-    const hash = name
-      .split("")
-      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
-
-    return AVATAR_COLORS[hash % AVATAR_COLORS.length];
-  };
   return (
-
     <div className="board-toolbar">
       {/* Search */}
       <div className="toolbar-search">
@@ -37,7 +33,12 @@ const BoardToolbar = () => {
           <circle cx="7" cy="7" r="5" />
           <path d="M12 12l3 3" strokeLinecap="round" />
         </svg>
-        <input type="text" placeholder="Search board" />
+        <input 
+          type="text" 
+          placeholder="Search board" 
+          value={localSearch}
+          onChange={e => setLocalSearch(e.target.value)}
+        />
       </div>
 
       {/* Avatar stack */}
@@ -63,12 +64,49 @@ const BoardToolbar = () => {
       </button>
 
       {/* Custom filters */}
-      <button className="toolbar-btn">
-        Custom filters
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
-      </button>
+      <div style={{ position: 'relative' }}>
+        <button 
+          className={`toolbar-btn ${filterAssignee ? 'active' : ''}`} 
+          onClick={() => setIsFilterOpen(!isFilterOpen)}
+        >
+          {filterAssignee ? `Filter: ${filterAssignee}` : 'Custom filters'}
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </button>
+
+        {isFilterOpen && (
+          <div className="filter-dropdown">
+            <div className="filter-dropdown-header">Filter by Assignee</div>
+            <div 
+              className={`filter-item ${filterAssignee === null ? 'selected' : ''}`}
+              onClick={() => {
+                onFilterChange(null);
+                setIsFilterOpen(false);
+              }}
+            >
+              <div className="avatar" style={{ background: '#596773' }}>All</div>
+              <span>All Users</span>
+            </div>
+            
+            {team.map(member => (
+              <div 
+                key={member._id}
+                className={`filter-item ${filterAssignee === member.name ? 'selected' : ''}`}
+                onClick={() => {
+                  onFilterChange(member.name);
+                  setIsFilterOpen(false);
+                }}
+              >
+                <div className="avatar" style={{ background: getAvatarColor(member.name) }}>
+                  {getInitials(member.name)}
+                </div>
+                <span>{member.name}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       <div className="toolbar-spacer" />
 

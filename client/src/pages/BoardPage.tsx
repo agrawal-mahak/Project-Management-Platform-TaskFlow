@@ -23,9 +23,11 @@ type ModalState =
 
 interface BoardPageProps {
   isManager?: boolean;
+  filterAssignee?: string | null;
+  searchQuery?: string;
 }
 
-const BoardPage = ({ isManager = true }: BoardPageProps) => {
+const BoardPage = ({ isManager = true, filterAssignee, searchQuery }: BoardPageProps) => {
   const [cards, setCards] = useState<Card[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [modalState, setModalState] = useState<ModalState>({ open: false });
@@ -34,7 +36,7 @@ const BoardPage = ({ isManager = true }: BoardPageProps) => {
   const loadCards = async (showLoading = true) => {
     try {
       if (showLoading) setIsLoading(true);
-      const data = await fetchCards();
+      const data = await fetchCards(searchQuery);
       setCards(data);
     } catch {
       toast.error('Failed to load tasks');
@@ -45,7 +47,7 @@ const BoardPage = ({ isManager = true }: BoardPageProps) => {
 
   useEffect(() => {
     loadCards();
-  }, []);
+  }, [searchQuery]);
 
   // ── Listen for Navbar "Create" button click ────────────────────────────────
   useEffect(() => {
@@ -170,7 +172,7 @@ const BoardPage = ({ isManager = true }: BoardPageProps) => {
             <KanbanColumn
               key={col.id}
               column={col}
-              cards={cards.filter(c => c.status === col.id)}
+              cards={cards.filter(c => c.status === col.id && (!filterAssignee || c.assignedTo === filterAssignee))}
               onCardEdit={async (card) => {
                 if (isManager && card._mongoId) {
                   try {

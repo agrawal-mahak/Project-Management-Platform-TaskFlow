@@ -1,6 +1,8 @@
 import axiosInstance from "./axiosInstance";
 import type { Card, TaskFormData } from "../types";
 
+import { getAvatarColor, getInitials } from "../utils/helpers";
+
 // ── Map backend document → frontend Card ────────────────────────────────────
 export const toCard = (doc: any): Card => ({
   id: `ERP-${doc.taskNo}`,
@@ -10,9 +12,8 @@ export const toCard = (doc: any): Card => ({
   priority: doc.priority,
   dueDate: doc.endDate ? String(doc.endDate).slice(0, 10) : undefined,
   assignedTo: doc.assignedTo,
-  assigneeInitials: doc.assignedTo
-    ? doc.assignedTo.split(' ').map((w: string) => w[0]?.toUpperCase()).join('').slice(0, 2)
-    : undefined,
+  assigneeInitials: doc.assignedTo ? getInitials(doc.assignedTo) : undefined,
+  assigneeColor: doc.assignedTo ? getAvatarColor(doc.assignedTo) : undefined,
   imageUrl: doc.imageUrl,
 });
 
@@ -28,8 +29,10 @@ const toApiBody = (data: TaskFormData) => ({
 });
 
 // ── GET /api/cards — fetch all, returns mapped Card[] ───────────────────────
-export const fetchCards = async (): Promise<Card[]> => {
-  const res = await axiosInstance.get('/cards', { params: { limit: 100 } });
+export const fetchCards = async (search?: string): Promise<Card[]> => {
+  const params: any = { limit: 100 };
+  if (search) params.search = search;
+  const res = await axiosInstance.get('/cards', { params });
   return (res.data.data as any[]).map(toCard);
 };
 
