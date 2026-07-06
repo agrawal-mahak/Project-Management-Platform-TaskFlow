@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/Navbar';
-import ProjectHeader from './components/ProjectHeader';
+import ProjectHeader, { TABS } from './components/ProjectHeader';
 import BoardToolbar from './components/BoardToolbar';
 import BoardPage from './pages/BoardPage';
+import EmptyTabView from './components/EmptyTabView';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import TeamPage from './pages/TeamPage';
@@ -15,6 +17,9 @@ const BoardView = () => {
   const user = getUserFromStorage();
   const isManager = user?.role === 'manager' || user?.role === 'admin';
   const isAdmin = user?.role === 'admin';
+  const [activeTab, setActiveTab] = useState('board');
+
+  const currentTabLabel = TABS.find(t => t.id === activeTab)?.label || 'Unknown';
 
   return (
     <>
@@ -27,9 +32,16 @@ const BoardView = () => {
           window.dispatchEvent(new CustomEvent('taskflow:open-create'));
         }} 
       />
-      <ProjectHeader />
-      <BoardToolbar />
-      <BoardPage isManager={isManager} />
+      <ProjectHeader activeTab={activeTab} onTabChange={setActiveTab} />
+      
+      {activeTab === 'board' ? (
+        <>
+          <BoardToolbar />
+          <BoardPage isManager={isManager} />
+        </>
+      ) : (
+        <EmptyTabView tabName={currentTabLabel} />
+      )}
     </>
   );
 };

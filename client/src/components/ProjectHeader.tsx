@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 // Sub-navigation tabs shown below the project name
-const TABS = [
+export const TABS = [
   { id: 'summary',    label: 'Summary'    },
   { id: 'timeline',   label: 'Timeline'   },
   { id: 'backlog',    label: 'Backlog'    },
@@ -14,8 +14,12 @@ const TABS = [
   { id: 'timesheet',  label: 'Timesheet'  },
 ];
 
-const ProjectHeader = () => {
-  const [activeTab, setActiveTab] = useState('board');
+interface Props {
+  activeTab: string;
+  onTabChange: (tabId: string) => void;
+}
+
+const ProjectHeader = ({ activeTab, onTabChange }: Props) => {
 
   return (
     <div className="project-header">
@@ -78,7 +82,7 @@ const ProjectHeader = () => {
           <button
             key={tab.id}
             className={`subnav-tab ${activeTab === tab.id ? 'active' : ''}`}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => onTabChange(tab.id)}
           >
             {tab.label}
           </button>
