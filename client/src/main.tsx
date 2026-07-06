@@ -19,13 +19,13 @@ createRoot(document.getElementById('root')!).render(
           toastOptions={{
             duration: 3000,
             style: {
-              background: '#22272b',
-              color: '#dee4ea',
-              border: '1px solid #3a4450',
+              background: 'var(--bg-card)',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border)',
               fontSize: '13px',
             },
-            success: { iconTheme: { primary: '#4bce97', secondary: '#22272b' } },
-            error: { iconTheme: { primary: '#f87168', secondary: '#22272b' } },
+            success: { iconTheme: { primary: 'var(--accent-green)', secondary: 'var(--bg-card)' } },
+            error: { iconTheme: { primary: 'var(--accent-red)', secondary: 'var(--bg-card)' } },
           }}
         />
       </BrowserRouter>

@@ -195,21 +195,40 @@
 .subnav::-webkit-scrollbar { display: none; }
 
 .subnav-tab {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 10px;
-  font-size: 13px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--text-secondary);
-  border-bottom: 2px solid transparent;
   white-space: nowrap;
-  transition: color 0.15s, border-color 0.15s;
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  background: transparent;
+  border-radius: 6px 6px 0 0;
+  transition: color 0.2s ease, background 0.2s ease;
 }
-.subnav-tab:hover { color: var(--text-heading); background: var(--border-light); }
+.subnav-tab::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent-blue);
+  border-radius: 3px 3px 0 0;
+  transform: scaleX(0);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.subnav-tab:hover {
+  color: var(--text-heading);
+  background: var(--bg-hover, rgba(140, 155, 171, 0.08));
+}
 .subnav-tab.active {
   color: var(--accent-blue);
-  border-bottom-color: var(--accent-blue);
+}
+.subnav-tab.active::after {
+  transform: scaleX(1);
 }
 .subnav-tab svg { opacity: 0.7; }
 

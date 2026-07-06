@@ -236,7 +236,7 @@ const Navbar = ({ onCreateClick, isManager = true, isAdmin = false }: Props) => 
                   <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 'normal', marginTop: '4px' }}>{user.email}</div>
                 </div>
                 <div className="dropdown-item">✏️ Edit Profile</div>
-                <div className="dropdown-item" onClick={handleLogout} style={{ color: 'var(--accent-red)' }}>🚪 Logout</div>
+                <div className="dropdown-item" onClick={handleLogout} style={{ color: 'var(--accent-red)' }}>➜] Logout</div>
               </div>
             )}
           </div>

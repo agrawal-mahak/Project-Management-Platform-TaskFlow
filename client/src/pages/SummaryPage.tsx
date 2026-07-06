@@ -25,13 +25,15 @@ const SummaryPage = () => {
           return {
             name: user.name,
             'Done': userCards.filter((c: Card) => c.status === 'done').length,
-            'In Progress': userCards.filter((c: Card) => ['inprogress', 'intest', 'revision'].includes(c.status)).length,
+            'Revision Needed': userCards.filter((c: Card) => c.status === 'revision').length,
+            'In Test': userCards.filter((c: Card) => c.status === 'intest').length,
+            'In Progress': userCards.filter((c: Card) => c.status === 'inprogress').length,
             'To Do': userCards.filter((c: Card) => ['todo', 'draft'].includes(c.status)).length,
           };
         });
 
         // Optionally filter out users with 0 tasks
-        const activeUsersData = chartData.filter(d => d['Done'] > 0 || d['In Progress'] > 0 || d['To Do'] > 0);
+        const activeUsersData = chartData.filter(d => d['Done'] > 0 || d['Revision Needed'] > 0 || d['In Test'] > 0 || d['In Progress'] > 0 || d['To Do'] > 0);
 
         setData(activeUsersData);
       } catch (error) {
@@ -75,6 +77,8 @@ const SummaryPage = () => {
               />
               <Legend wrapperStyle={{ paddingTop: '20px' }} />
               <Bar dataKey="Done" stackId="a" fill="#4bce97" radius={[0, 0, 4, 4]} barSize={40} />
+              <Bar dataKey="Revision Needed" stackId="a" fill="#f87171" />
+              <Bar dataKey="In Test" stackId="a" fill="#c084fc" />
               <Bar dataKey="In Progress" stackId="a" fill="#579dff" />
               <Bar dataKey="To Do" stackId="a" fill="#f5cd47" radius={[4, 4, 0, 0]} />
             </BarChart>

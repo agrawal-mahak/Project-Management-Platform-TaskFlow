@@ -51,7 +51,7 @@ const TeamPage = () => {
     return (
       <>
         <Navbar isManager={false} isAdmin={false} onCreateClick={() => {}} />
-        <div style={{ padding: 40, textAlign: 'center', color: '#f87168' }}>
+        <div style={{ padding: 40, textAlign: 'center', color: 'var(--accent-red)' }}>
           <h2>Access Denied</h2>
           <p>You must be an admin to view this page.</p>
         </div>
@@ -60,19 +60,19 @@ const TeamPage = () => {
   }
 
   return (
-    <div style={{ backgroundColor: '#1d2125', minHeight: '100vh', color: '#b6c2cf' }}>
+    <div style={{ backgroundColor: 'var(--bg-col)', minHeight: '100vh', color: 'var(--text-secondary)' }}>
       <Navbar isManager={true} isAdmin={true} onCreateClick={() => {}} />
       <div style={{ padding: '40px', maxWidth: 900, margin: '0 auto' }}>
-        <h1 style={{ marginBottom: 8, color: '#c7d1db' }}>Team Management</h1>
+        <h1 style={{ marginBottom: 8, color: 'var(--text-heading)' }}>Team Management</h1>
         <p style={{ marginBottom: 32, fontSize: 14 }}>View your workspace members and manage their roles.</p>
         
         {isLoading ? (
           <div className="auth-spinner" style={{ margin: '0 auto' }} />
         ) : (
-          <div style={{ background: '#22272b', borderRadius: 8, overflow: 'hidden', border: '1px solid #3a4450' }}>
+          <div style={{ background: 'var(--bg-card)', borderRadius: 8, overflow: 'hidden', border: '1px solid var(--border)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
-                <tr style={{ borderBottom: '1px solid #3a4450', background: '#2c333a' }}>
+                <tr style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg-col)' }}>
                   <th style={{ padding: '16px 24px', fontWeight: 600 }}>Name</th>
                   <th style={{ padding: '16px 24px', fontWeight: 600 }}>Email</th>
                   <th style={{ padding: '16px 24px', fontWeight: 600 }}>Role</th>
@@ -80,8 +80,8 @@ const TeamPage = () => {
               </thead>
               <tbody>
                 {users.map(user => (
-                  <tr key={user._id} style={{ borderBottom: '1px solid #3a4450' }}>
-                    <td style={{ padding: '16px 24px', color: '#dee4ea' }}>{user.name}</td>
+                  <tr key={user._id} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '16px 24px', color: 'var(--text-primary)' }}>{user.name}</td>
                     <td style={{ padding: '16px 24px' }}>{user.email}</td>
                     <td style={{ padding: '16px 24px' }}>
                       <select 
@@ -89,9 +89,9 @@ const TeamPage = () => {
                         onChange={(e) => handleRoleChange(user._id, e.target.value)}
                         disabled={user._id === currentUser?._id}
                         style={{
-                          background: '#1d2125',
-                          color: '#dee4ea',
-                          border: '1px solid #3a4450',
+                          background: 'var(--bg-input)',
+                          color: 'var(--text-primary)',
+                          border: '1px solid var(--border)',
                           padding: '6px 12px',
                           borderRadius: 4,
                           outline: 'none',
