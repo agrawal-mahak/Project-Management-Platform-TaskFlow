@@ -13,9 +13,9 @@ export const getCards = async (req: Request, res: Response) => {
             console.log(`[GET /api/cards] Applying search filter: "${search}"`);
         }
 
-        const pageNumber  = parseInt(page  as string) || 1;
+        const pageNumber = parseInt(page as string) || 1;
         const limitNumber = parseInt(limit as string) || 10;
-        const skip        = (pageNumber - 1) * limitNumber;
+        const skip = (pageNumber - 1) * limitNumber;
 
         const totalCards = await Card.countDocuments(query);
         console.log(`[GET /api/cards] Total matching cards: ${totalCards}`);
@@ -26,10 +26,10 @@ export const getCards = async (req: Request, res: Response) => {
             console.log(`[GET /api/cards] No cards found — returning empty result`);
             return res.status(200).json({
                 meta: {
-                    totalItems:  0,
-                    totalPages:  0,
+                    totalItems: 0,
+                    totalPages: 0,
                     currentPage: pageNumber,
-                    limit:       limitNumber
+                    limit: limitNumber
                 },
                 data: []
             });
@@ -39,10 +39,10 @@ export const getCards = async (req: Request, res: Response) => {
 
         return res.status(200).json({
             meta: {
-                totalItems:  totalCards,
-                totalPages:  Math.ceil(totalCards / limitNumber),
+                totalItems: totalCards,
+                totalPages: Math.ceil(totalCards / limitNumber),
                 currentPage: pageNumber,
-                limit:       limitNumber
+                limit: limitNumber
             },
             data: cards
         });
@@ -57,8 +57,9 @@ export const getCards = async (req: Request, res: Response) => {
 export const createCard = async (req: Request, res: Response) => {
     try {
         console.log(`[POST /api/cards] Creating card with data:`, req.body);
-        const newCard = new Card(req.body);
-        await newCard.save();
+        const { taskNo, status, taskName, priority, startDate, endDate, assignedTo } = req.body;
+        const imageUrl = req.file ? `/uploads/${req.file.filename}` : undefined;
+        const newCard = await Card.create({ taskNo, status, taskName, priority, startDate, endDate, assignedTo, ...(imageUrl && { imageUrl }) });
         console.log(`[POST /api/cards] Card created successfully → ID: ${newCard._id}`);
         return res.status(201).json(newCard);
     } catch (error: any) {
@@ -128,6 +129,10 @@ export const updateCard = async (req: Request, res: Response) => {
             assignedTo
         };
 
+        if (req.file) {
+            updateData.imageUrl = `/uploads/${req.file.filename}`;
+        }
+
         // If the user is an employee, they are ONLY allowed to update the status (drag-and-drop).
         // We delete all other fields from the update object.
         if (req.user?.role === 'employee') {
@@ -139,10 +144,10 @@ export const updateCard = async (req: Request, res: Response) => {
             { $set: updateData },
             { new: true, runValidators: true }
         );
-        if(!updatedCard){
-            return res.status(404).json({message:"Card not found"})
+        if (!updatedCard) {
+            return res.status(404).json({ message: "Card not found" })
         }
-        return res.status(200).json({message:"Card updated successfully"})
+        return res.status(200).json({ message: "Card updated successfully" })
 
     } catch (error) {
         console.error(error);

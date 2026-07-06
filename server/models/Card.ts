@@ -38,6 +38,9 @@ const CardSchema = new Schema<ICard>({
         type: String,
         required: [true, "Assigned To is required"]
     },
+    imageUrl: {
+        type: String
+    }
 });
 
 // Third argument locks this model to the existing 'boards' collection

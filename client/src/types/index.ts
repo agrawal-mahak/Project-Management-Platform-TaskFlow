@@ -20,6 +20,7 @@ export interface Card {
   assigneeInitials?: string;
   assigneeColor?: string;
   assignedTo?: string;
+  imageUrl?: string;
 }
 
 // ── Column types ──
@@ -37,4 +38,6 @@ export interface TaskFormData {
   priority:   string;
   dueDate:    string;
   assignedTo: string;   // visible field in the Create/Edit modal
+  image?:     File | null; // For the upload form
+  currentImageUrl?: string;
 }

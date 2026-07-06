@@ -13,6 +13,7 @@ export const toCard = (doc: any): Card => ({
   assigneeInitials: doc.assignedTo
     ? doc.assignedTo.split(' ').map((w: string) => w[0]?.toUpperCase()).join('').slice(0, 2)
     : undefined,
+  imageUrl: doc.imageUrl,
 });
 
 // ── Map frontend TaskFormData → backend request body ────────────────────────
@@ -32,15 +33,54 @@ export const fetchCards = async (): Promise<Card[]> => {
   return (res.data.data as any[]).map(toCard);
 };
 
+// ── GET /api/cards/:id — fetch single card ─────────────────────────────────
+export const fetchCardById = async (mongoId: string): Promise<Card> => {
+  const res = await axiosInstance.get(`/cards/${mongoId}`);
+  return toCard(res.data);
+};
+
 // ── POST /api/cards — create a card ─────────────────────────────────────────
 export const createCard = async (data: TaskFormData): Promise<Card> => {
-  const res = await axiosInstance.post('/cards', toApiBody(data));
-  return toCard(res.data);
+  if (data.image) {
+    const formData = new FormData();
+    formData.append('taskNo', data.taskNo.replace('ERP-', ''));
+    formData.append('taskName', data.title);
+    formData.append('status', data.status);
+    formData.append('priority', data.priority);
+    formData.append('startDate', new Date().toISOString());
+    formData.append('endDate', data.dueDate ? new Date(data.dueDate).toISOString() : new Date().toISOString());
+    formData.append('assignedTo', data.assignedTo || 'Unassigned');
+    formData.append('image', data.image);
+
+    const res = await axiosInstance.post('/cards', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return toCard(res.data);
+  } else {
+    const res = await axiosInstance.post('/cards', toApiBody(data));
+    return toCard(res.data);
+  }
 };
 
 // ── PUT /api/cards/:id — update a card (all fields) ─────────────────────────
 export const updateCard = async (mongoId: string, data: TaskFormData): Promise<void> => {
-  await axiosInstance.put(`/cards/${mongoId}`, toApiBody(data));
+  if (data.image) {
+    const formData = new FormData();
+    formData.append('taskNo', data.taskNo.replace('ERP-', ''));
+    formData.append('taskName', data.title);
+    formData.append('status', data.status);
+    formData.append('priority', data.priority);
+    formData.append('startDate', new Date().toISOString());
+    formData.append('endDate', data.dueDate ? new Date(data.dueDate).toISOString() : new Date().toISOString());
+    formData.append('assignedTo', data.assignedTo || 'Unassigned');
+    formData.append('image', data.image);
+
+    await axiosInstance.put(`/cards/${mongoId}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+  } else {
+    await axiosInstance.put(`/cards/${mongoId}`, toApiBody(data));
+  }
 };
 
 // ── PUT /api/cards/:id — status-only update (for drag-and-drop) ─────────────

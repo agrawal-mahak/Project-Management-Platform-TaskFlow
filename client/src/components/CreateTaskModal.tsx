@@ -67,6 +67,13 @@ const CreateTaskModal = ({ mode, defaultValues, taskNumber, onClose, onSubmit, o
     fetchUsers().then(setUsers).catch(console.error);
   }, []);
 
+  // ── Image state ──
+  const [image, setImage] = useState<File | null>(null);
+
+  const handleFormSubmit = (data: TaskFormData) => {
+    onSubmit({ ...data, image });
+  };
+
   // Close when clicking the backdrop
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) onClose();
@@ -109,7 +116,7 @@ const CreateTaskModal = ({ mode, defaultValues, taskNumber, onClose, onSubmit, o
         </div>
 
         {/* ── Body ── */}
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(handleFormSubmit)}>
           <div className="modal-body">
 
             {/* Task No — read-only badge */}
@@ -209,6 +216,33 @@ const CreateTaskModal = ({ mode, defaultValues, taskNumber, onClose, onSubmit, o
                   </option>
                 ))}
               </select>
+            </div>
+
+            {/* Cover Image */}
+            <div className="form-field">
+              <label className="form-label" htmlFor="task-image">
+                Cover Image (Optional)
+              </label>
+              {defaultValues?.currentImageUrl && !image && (
+                <div style={{ marginBottom: '12px' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Current Image:</span>
+                  <div style={{ marginTop: '4px', borderRadius: '4px', overflow: 'hidden', height: '60px', width: '100px' }}>
+                    <img src={defaultValues.currentImageUrl} alt="Current Cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                </div>
+              )}
+              <input 
+                id="task-image"
+                className="form-input"
+                type="file" 
+                accept="image/*" 
+                onChange={(e) => {
+                  if (e.target.files && e.target.files.length > 0) {
+                    setImage(e.target.files[0]);
+                  }
+                }} 
+                style={{ padding: '8px' }}
+              />
             </div>
 
           </div>

@@ -22,6 +22,8 @@ app.use(express.json());
 // Routes
 app.use("/api/cards", cardRoutes);
 app.use("/api/auth", authRoutes);
+// Add this near your other app.use statements
+app.use('/uploads', express.static('uploads'));
 
 
 const PORT = process.env.PORT || 5000;

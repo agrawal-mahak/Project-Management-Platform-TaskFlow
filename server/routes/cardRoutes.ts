@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { getCards, createCard, getCardById, deleteCard, updateCard } from "../controllers/cardController.js";
 import { protect, authorizeRoles } from "../middleware/authMiddleware.js";
+import { upload } from "../middleware/uploadMiddleware.js";
 
 const router = Router();
 
@@ -14,12 +15,12 @@ router.get("/", getCards);
 router.get("/:cardId", getCardById);
 
 // POST /api/cards          → create a new card (Only managers and admins can create)
-router.post("/", authorizeRoles('manager', 'admin'), createCard);
+router.post("/", authorizeRoles('manager', 'admin'), upload.single('image'), createCard);
 
 // DELETE /api/cards/:cardId → delete a card (Only managers and admins can delete)
 router.delete("/:cardId", authorizeRoles('manager', 'admin'), deleteCard);
 
 // PUT /api/cards/:cardId → update a card
-router.put("/:cardId", updateCard);
+router.put("/:cardId", upload.single('image'), updateCard);
 
 export default router;

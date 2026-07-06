@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import type { Card, Column, TaskFormData } from '../types';
+import type { Card, TaskFormData } from '../types';
 import KanbanColumn from '../components/KanbanColumn';
 import CreateTaskModal from '../components/CreateTaskModal';
-import { fetchCards, createCard, updateCard, deleteCard, patchCardStatus } from '../api/cardApi';
+import { fetchCards, createCard, updateCard, deleteCard, patchCardStatus, fetchCardById } from '../api/cardApi';
 import toast from 'react-hot-toast';
 
 // ── Static column definitions ──────────────────────────────────────────────
@@ -142,6 +142,7 @@ const BoardPage = ({ isManager = true }: BoardPageProps) => {
       priority: card.priority,
       dueDate: card.dueDate ?? '',
       assignedTo: card.assignedTo ?? '',
+      currentImageUrl: card.imageUrl,
     };
   };
 
@@ -170,9 +171,14 @@ const BoardPage = ({ isManager = true }: BoardPageProps) => {
               key={col.id}
               column={col}
               cards={cards.filter(c => c.status === col.id)}
-              onCardEdit={card => {
-                if (isManager) {
-                  setModalState({ open: true, mode: 'edit', card });
+              onCardEdit={async (card) => {
+                if (isManager && card._mongoId) {
+                  try {
+                    const freshCard = await fetchCardById(card._mongoId);
+                    setModalState({ open: true, mode: 'edit', card: freshCard });
+                  } catch (e) {
+                    toast.error('Failed to load fresh card data');
+                  }
                 }
               }}
               onCardDelete={card => {

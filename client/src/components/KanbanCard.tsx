@@ -79,6 +79,17 @@ const KanbanCard = ({ card, onEdit, onDelete, isManager = true }: Props) => {
         </div>
       )}
 
+      {/* Card Cover Image */}
+      {card.imageUrl && (
+        <div style={{ margin: '-16px -16px 12px -16px', borderTopLeftRadius: '8px', borderTopRightRadius: '8px', overflow: 'hidden', height: '120px' }}>
+          <img 
+            src={card.imageUrl} 
+            alt="Card Cover" 
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+          />
+        </div>
+      )}
+
       {/* Label badge */}
       {card.label && (
         <div className={`card-label ${LABEL_CLASS[card.label.color] ?? ''}`}>
