@@ -61,17 +61,31 @@ const CreateTaskModal = ({ mode, defaultValues, taskNumber, onClose, onSubmit, o
 
   const taskNo = watch('taskNo');
 
-  // ── Fetch users for dropdown ──
   const [users, setUsers] = useState<{ _id: string; name: string; email: string }[]>([]);
   useEffect(() => {
-    fetchUsers().then(setUsers).catch(console.error);
-  }, []);
+    fetchUsers().then(fetchedUsers => {
+      setUsers(fetchedUsers);
+      if (defaultValues?.assignedTo) {
+        // Re-apply the value after options render
+        setValue('assignedTo', defaultValues.assignedTo);
+      }
+    }).catch(console.error);
+  }, [defaultValues, setValue]);
 
   // ── Image state ──
   const [image, setImage] = useState<File | null>(null);
 
   const handleFormSubmit = (data: TaskFormData) => {
-    onSubmit({ ...data, image });
+    // The dropdown now uses userId, but we need to send the user's name to the backend
+    // to preserve the avatar and initials logic.
+    const selectedUser = users.find(u => u._id === data.assignedTo);
+    const finalAssignedTo = selectedUser ? selectedUser.name : data.assignedTo;
+
+    onSubmit({
+      ...data,
+      assignedTo: finalAssignedTo,
+      image,
+    });
   };
 
   // Close when clicking the backdrop
@@ -211,7 +225,7 @@ const CreateTaskModal = ({ mode, defaultValues, taskNumber, onClose, onSubmit, o
               >
                 <option value="">Unassigned</option>
                 {users.map(user => (
-                  <option key={user._id} value={user.name}>
+                  <option key={user._id} value={user._id}>
                     {user.name} ({user.email})
                   </option>
                 ))}

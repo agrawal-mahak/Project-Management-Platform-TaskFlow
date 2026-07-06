@@ -20,6 +20,7 @@ export interface Card {
   assigneeInitials?: string;
   assigneeColor?: string;
   assignedTo?: string;
+  assignedUserId?: string;
   imageUrl?: string;
 }
 

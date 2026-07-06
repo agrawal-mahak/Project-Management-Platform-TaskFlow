@@ -143,7 +143,7 @@ const BoardPage = ({ isManager = true, filterAssignee, searchQuery }: BoardPageP
       status: card.status,
       priority: card.priority,
       dueDate: card.dueDate ?? '',
-      assignedTo: card.assignedTo ?? '',
+      assignedTo: card.assignedUserId ?? '',
       currentImageUrl: card.imageUrl,
     };
   };

@@ -14,6 +14,13 @@ import { getUserFromStorage } from './api/authApi';
 
 import SummaryPage from './pages/SummaryPage';
 import CalendarPage from './pages/CalendarPage';
+import BacklogPage from './pages/BacklogPage';
+import ListPage from './pages/ListPage';
+import ActivitiesPage from './pages/ActivitiesPage';
+import DevelopmentPage from './pages/DevelopmentPage';
+import TimesheetPage from './pages/TimesheetPage';
+import CodePage from './pages/CodePage';
+import TimelinePage from './pages/TimelinePage';
 
 /* ── Board view ── */
 const BoardView = () => {
@@ -56,6 +63,20 @@ const BoardView = () => {
         <SummaryPage />
       ) : activeTab === 'calendar' ? (
         <CalendarPage />
+      ) : activeTab === 'backlog' ? (
+        <BacklogPage />
+      ) : activeTab === 'list' ? (
+        <ListPage />
+      ) : activeTab === 'activities' ? (
+        <ActivitiesPage />
+      ) : activeTab === 'development' ? (
+        <DevelopmentPage />
+      ) : activeTab === 'timesheet' ? (
+        <TimesheetPage />
+      ) : activeTab === 'code' ? (
+        <CodePage />
+      ) : activeTab === 'timeline' ? (
+        <TimelinePage />
       ) : (
         <EmptyTabView tabName={currentTabLabel} />
       )}

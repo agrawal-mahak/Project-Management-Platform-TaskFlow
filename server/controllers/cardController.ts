@@ -1,5 +1,6 @@
 import { type Request, type Response } from "express";
 import Card from "../models/Card.js";
+import User from "../models/User.js";
 
 // ── GET /api/cards ──────────────────────────────────────────────────────────
 export const getCards = async (req: Request, res: Response) => {
@@ -83,13 +84,28 @@ export const getCardById = async (req: Request, res: Response) => {
     try {
         const { cardId } = req.params;
         console.log(`[GET /api/cards/${cardId}] Fetching card by ID`);
-        const card = await Card.findById(cardId);
+        const card = await Card.findById(cardId).lean();
+        
         if (!card) {
             console.log(`[GET /api/cards/${cardId}] Card not found`);
             return res.status(404).json({ message: "Card not found" });
         }
+
+        let assignedUserId = null;
+        if (card.assignedTo) {
+            const user = await User.findOne({ name: card.assignedTo }).lean();
+            if (user) {
+                assignedUserId = user._id;
+            }
+        }
+
+        const responseData = {
+            ...card,
+            assignedUserId
+        };
+
         console.log(`[GET /api/cards/${cardId}] Card found → "${card.taskName ?? cardId}"`);
-        return res.status(200).json(card);
+        return res.status(200).json(responseData);
     } catch (error) {
         console.error(`[GET /api/cards/:cardId] Error:`, error);
         return res.status(500).json({ message: "Internal server error" });

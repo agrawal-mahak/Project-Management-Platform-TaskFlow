@@ -12,6 +12,7 @@ export const toCard = (doc: any): Card => ({
   priority: doc.priority,
   dueDate: doc.endDate ? String(doc.endDate).slice(0, 10) : undefined,
   assignedTo: doc.assignedTo,
+  assignedUserId: doc.assignedUserId,
   assigneeInitials: doc.assignedTo ? getInitials(doc.assignedTo) : undefined,
   assigneeColor: doc.assignedTo ? getAvatarColor(doc.assignedTo) : undefined,
   imageUrl: doc.imageUrl,
