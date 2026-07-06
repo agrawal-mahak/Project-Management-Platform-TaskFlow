@@ -21,7 +21,11 @@ type ModalState =
   | { open: true; mode: 'create'; defaultStatus: string }
   | { open: true; mode: 'edit'; card: Card };
 
-const BoardPage = () => {
+interface BoardPageProps {
+  isManager?: boolean;
+}
+
+const BoardPage = ({ isManager = true }: BoardPageProps) => {
   const [cards, setCards] = useState<Card[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [modalState, setModalState] = useState<ModalState>({ open: false });
@@ -166,10 +170,17 @@ const BoardPage = () => {
               key={col.id}
               column={col}
               cards={cards.filter(c => c.status === col.id)}
-              onCardEdit={card => setModalState({ open: true, mode: 'edit', card })}
-              onCardDelete={card => handleDelete(card)}
+              onCardEdit={card => {
+                if (isManager) {
+                  setModalState({ open: true, mode: 'edit', card });
+                }
+              }}
+              onCardDelete={card => {
+                if (isManager) handleDelete(card);
+              }}
               onAddCard={colId => setModalState({ open: true, mode: 'create', defaultStatus: colId })}
               onDragStatusChange={handleDragStatusChange}
+              isManager={isManager}
             />
           ))}
         </div>

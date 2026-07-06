@@ -4,6 +4,8 @@ import toast from 'react-hot-toast';
 
 interface Props {
   onCreateClick: () => void;
+  isManager?: boolean;
+  isAdmin?: boolean;
 }
 
 // Derive initials from a full name, e.g. "Jane Doe" → "JD"
@@ -20,7 +22,7 @@ const AVATAR_COLORS = ['#c43c3c', '#2d8a4e', '#2d6ab0', '#7c3aed', '#b45309', '#
 const getAvatarColor = (name: string): string =>
   AVATAR_COLORS[name.charCodeAt(0) % AVATAR_COLORS.length];
 
-const Navbar = ({ onCreateClick }: Props) => {
+const Navbar = ({ onCreateClick, isManager = true, isAdmin = false }: Props) => {
   const navigate = useNavigate();
   const user = getUserFromStorage();
   const initials = user ? getInitials(user.name) : '?';
@@ -64,12 +66,25 @@ const Navbar = ({ onCreateClick }: Props) => {
 
       {/* Right: create + icons + avatar + logout */}
       <div className="navbar-right">
-        <button className="create-btn" onClick={onCreateClick}>
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          </svg>
-          Create
-        </button>
+        {isManager && (
+          <button className="create-btn" onClick={onCreateClick}>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            Create
+          </button>
+        )}
+
+        {isAdmin && (
+          <button 
+            className="nav-icon-btn" 
+            title="Team Dashboard"
+            onClick={() => navigate('/team')}
+            style={{ width: 'auto', padding: '0 8px', fontSize: 13, fontWeight: 600, background: 'transparent', border: '1px solid #3a4450' }}
+          >
+            Team
+          </button>
+        )}
 
         <button className="nav-icon-btn" title="Notifications">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

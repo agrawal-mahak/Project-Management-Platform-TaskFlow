@@ -6,6 +6,7 @@ export interface AuthResponse {
         _id: string,
         name: string,
         email: string,
+        role: string,
     }
 }
 // ---------google authentication-----------
@@ -53,13 +54,18 @@ export const logoutUser = (): void => {
 }
 
 // get stored user (set this after login/register)
-export const getUserFromStorage = (): { name: string; email: string } | null => {
+export const getUserFromStorage = (): { _id: string; name: string; email: string; role: string } | null => {
     const raw = localStorage.getItem('user');
     return raw ? JSON.parse(raw) : null;
 }
 
 // fetch all users
-export const fetchUsers = async (): Promise<{ _id: string; name: string; email: string }[]> => {
+export const fetchUsers = async (): Promise<{ _id: string; name: string; email: string; role?: string }[]> => {
     const res = await axiosInstance.get('/auth/users');
     return res.data;
+}
+
+// change user role
+export const updateUserRole = async (userId: string, role: string): Promise<void> => {
+    await axiosInstance.put(`/auth/users/${userId}/role`, { role });
 }

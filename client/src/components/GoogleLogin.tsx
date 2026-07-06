@@ -16,13 +16,8 @@ const GoogleLoginButton = ({ mode = 'signin', label = 'Google', showMicrosoft = 
     const handleGoogleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try {
-                // Exchange Google access_token for user info, then send to our backend
-                const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-                }).then(r => r.json());
-
-                // userInfo.sub is Google's unique user ID — use it as the credential
-                await googleLogin(userInfo.sub);
+                // Send the actual access token to the backend for verification
+                await googleLogin(tokenResponse.access_token);
 
                 toast.success(mode === 'signup' ? 'Account created with Google! 🎉' : 'Logged in with Google!');
                 navigate('/');

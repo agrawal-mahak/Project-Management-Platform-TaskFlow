@@ -118,17 +118,25 @@ export const updateCard = async (req: Request, res: Response) => {
         const { cardId } = req.params;
         const { taskNo, status, taskName, priority, startDate, endDate, assignedTo } = req.body;
 
+        let updateData: any = {
+            taskNo,
+            status,
+            taskName,
+            priority,
+            startDate,
+            endDate,
+            assignedTo
+        };
+
+        // If the user is an employee, they are ONLY allowed to update the status (drag-and-drop).
+        // We delete all other fields from the update object.
+        if (req.user?.role === 'employee') {
+            updateData = { status: updateData.status };
+        }
+
         const updatedCard = await Card.findByIdAndUpdate(
             cardId,
-            {
-                taskNo,
-                status,
-                taskName,
-                priority,
-                startDate,
-                endDate,
-                assignedTo
-            },
+            { $set: updateData },
             { new: true, runValidators: true }
         );
         if(!updatedCard){

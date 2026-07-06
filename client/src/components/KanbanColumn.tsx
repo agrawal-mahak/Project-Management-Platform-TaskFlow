@@ -8,10 +8,11 @@ interface Props {
   onCardDelete:         (card: Card) => void;                         // full card (needs _mongoId)
   onAddCard:            (columnId: string) => void;
   onDragStatusChange?:  (card: Card, newStatus: string) => void;     // drag-and-drop save
+  isManager?:           boolean;
 }
 
 const KanbanColumn = ({
-  column, cards, onCardEdit, onCardDelete, onAddCard, onDragStatusChange,
+  column, cards, onCardEdit, onCardDelete, onAddCard, onDragStatusChange, isManager = true
 }: Props) => {
 
   // ── Drag target: allow drop ────────────────────────────────────────────────
@@ -69,18 +70,21 @@ const KanbanColumn = ({
             card={card}
             onEdit={onCardEdit}
             onDelete={onCardDelete}
+            isManager={isManager}
           />
         ))}
       </div>
 
       {/* Add card button */}
-      <button className="add-card-btn" onClick={() => onAddCard(column.id)}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <line x1="12" y1="5" x2="12" y2="19" />
-          <line x1="5" y1="12" x2="19" y2="12" />
-        </svg>
-        Create
-      </button>
+      {isManager && (
+        <button className="add-card-btn" onClick={() => onAddCard(column.id)}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Create
+        </button>
+      )}
     </div>
   );
 };

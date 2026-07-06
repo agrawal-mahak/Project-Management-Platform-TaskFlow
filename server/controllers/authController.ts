@@ -7,14 +7,15 @@ import { OAuth2Client } from "google-auth-library";
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // ── Helper: sign a JWT ──────────────────────────────────────────────────────
-const signToken = (id: string): string =>
-    jwt.sign({ id }, process.env.JWT_SECRET as string, { expiresIn: '7d' });
+const signToken = (id: string, role: string): string =>
+    jwt.sign({ id, role }, process.env.JWT_SECRET as string, { expiresIn: '7d' });
 
 // ── Helper: build the safe user object (no password) ───────────────────────
 const safeUser = (user: any) => ({   // ← ( ) wraps the object — required for arrow functions
     _id: user._id,
     name: user.name,
     email: user.email,
+    role: user.role,
     createdAt: user.createdAt,        // ← createdAt (with 'd'), not createAt
 });
 
@@ -29,18 +30,21 @@ export const googleAuth = async (req: Request, res: Response) => {
         if (!credential) {
             return res.status(400).json({ message: "No google token provided" })
         }
-        // verify the google token — throws if invalid or expired
-        const ticket = await googleClient.verifyIdToken({
-            idToken: credential,
-            audience: process.env.GOOGLE_CLIENT_ID!,  // ! = non-null assertion, env is guaranteed set
+        // verify the google access token by fetching user profile
+        const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: { Authorization: `Bearer ${credential}` }
         });
 
-        const payload = ticket.getPayload();
-        if (!payload || !payload.email) {
-            return res.status(401).json({ message: "Invalid google token" })
+        if (!response.ok) {
+            return res.status(401).json({ message: "Invalid google token" });
         }
 
-        // Destructure what we need FROM payload (they aren't in scope otherwise)
+        const payload = await response.json();
+        if (!payload || !payload.email) {
+            return res.status(401).json({ message: "Invalid google token payload" })
+        }
+
+        // Destructure what we need FROM payload
         const { name, email, sub: googleId } = payload;
 
         let user = await User.findOne({ email });
@@ -55,7 +59,7 @@ export const googleAuth = async (req: Request, res: Response) => {
         }
 
         // Sign your jwt 
-        const token = signToken(String(user._id));
+        const token = signToken(String(user._id), user.role);
         res.status(200).json({
             token,
             user: safeUser(user),
@@ -103,7 +107,7 @@ export const register = async (req: Request, res: Response) => {
         });
 
         // Sign the jwt
-        const token = signToken(String(user._id));
+        const token = signToken(String(user._id), user.role);
         res.status(201).json({
             token,
             user: safeUser(user),
@@ -140,7 +144,7 @@ export const login = async (req: Request, res: Response) => {
         }
 
         // sign jwt
-        const token = signToken(String(user._id))
+        const token = signToken(String(user._id), user.role)
         res.status(200).json({ token, user: safeUser(user), message: "Login successful" })
 
     }
@@ -171,10 +175,37 @@ export const getMe = async (req: Request, res: Response) => {
 export const getUsers = async (_req: Request, res: Response): Promise<void> => {
     try {
         // Return only safe fields — never the password hash
-        const users = await User.find({}).select('_id name email').lean();
+        const users = await User.find({}).select('_id name email role').lean();
         res.status(200).json(users);
     } catch (error) {
         console.error("[getUsers]", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
+
+// ── PUT /api/auth/users/:id/role — change user role ─────────────────────────
+export const updateUserRole = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { role } = req.body;
+        
+        if (!['employee', 'manager', 'admin'].includes(role)) {
+            return res.status(400).json({ message: "Invalid role" });
+        }
+
+        const user = await User.findByIdAndUpdate(
+            id,
+            { role },
+            { new: true, runValidators: true }
+        ).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({ message: "Role updated successfully", user });
+    } catch (error) {
+        console.error("[updateUserRole]", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
