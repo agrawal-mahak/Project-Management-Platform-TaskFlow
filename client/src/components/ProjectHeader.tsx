@@ -3,16 +3,16 @@ import toast from 'react-hot-toast';
 
 // Sub-navigation tabs shown below the project name
 export const TABS = [
-  { id: 'summary',    label: 'Summary'    },
-  { id: 'timeline',   label: 'Timeline'   },
-  { id: 'backlog',    label: 'Backlog'    },
-  { id: 'board',      label: 'Board'      },
-  { id: 'calendar',   label: 'Calendar'   },
-  { id: 'list',       label: 'List'       },
-  { id: 'code',       label: 'Code'       },
+  { id: 'summary', label: 'Summary' },
+  { id: 'timeline', label: 'Timeline' },
+  { id: 'backlog', label: 'Backlog' },
+  { id: 'board', label: 'Board' },
+  { id: 'calendar', label: 'Calendar' },
+  { id: 'list', label: 'List' },
+  { id: 'code', label: 'Code' },
   { id: 'activities', label: 'Activities' },
-  { id: 'development',label: 'Development'},
-  { id: 'timesheet',  label: 'Timesheet'  },
+  { id: 'development', label: 'Development' },
+  { id: 'timesheet', label: 'Timesheet' },
 ];
 
 interface Props {
@@ -69,7 +69,7 @@ const ProjectHeader = ({ activeTab, onTabChange }: Props) => {
           <div className="project-name">
             <div className="project-icon">📋</div>
             ERP Project
-            
+
             <div style={{ position: 'relative' }}>
               <button className="nav-icon-btn" title="Add member" onClick={() => toggleDropdown('add_member')}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -78,19 +78,19 @@ const ProjectHeader = ({ activeTab, onTabChange }: Props) => {
                   <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
               </button>
-              
+
               {openDropdown === 'add_member' && (
                 <div className="dropdown-menu dropdown-menu-left" style={{ padding: '16px', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>Invite Team Member</div>
-                  <input 
-                    type="email" 
-                    placeholder="Email address..." 
+                  <input
+                    type="email"
+                    placeholder="Email address..."
                     className="form-input"
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                     style={{ marginBottom: '12px' }}
                   />
-                  <button 
+                  <button
                     onClick={handleInvite}
                     style={{ background: 'var(--accent-blue)', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', width: '100%' }}
                   >
@@ -171,7 +171,7 @@ const ProjectHeader = ({ activeTab, onTabChange }: Props) => {
                 </svg>
               </button>
             </div>
-            
+
             <div className="chat-messages">
               <div className="chat-message">
                 <div className="chat-message-meta">Jane Smith • 10:42 AM</div>

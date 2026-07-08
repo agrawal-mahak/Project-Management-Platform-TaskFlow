@@ -35,27 +35,27 @@ const BoardView = () => {
 
   return (
     <>
-      <Navbar 
+      <Navbar
         isManager={isManager}
         isAdmin={isAdmin}
         onCreateClick={() => {
           // Trigger the "Create" button — BoardPage owns the modal, so we use a
           // custom event to open it from the Navbar without prop drilling
           window.dispatchEvent(new CustomEvent('taskflow:open-create'));
-        }} 
+        }}
       />
       <ProjectHeader activeTab={activeTab} onTabChange={setActiveTab} />
-      
+
       {activeTab === 'board' ? (
         <>
-          <BoardToolbar 
-            filterAssignee={filterAssignee} 
-            onFilterChange={setFilterAssignee} 
-            onSearchChange={setSearchQuery} 
+          <BoardToolbar
+            filterAssignee={filterAssignee}
+            onFilterChange={setFilterAssignee}
+            onSearchChange={setSearchQuery}
           />
-          <BoardPage 
-            isManager={isManager} 
-            filterAssignee={filterAssignee} 
+          <BoardPage
+            isManager={isManager}
+            filterAssignee={filterAssignee}
             searchQuery={searchQuery}
           />
         </>
@@ -87,11 +87,11 @@ const BoardView = () => {
 function App() {
   return (
     <Routes>
-      <Route path="/login"  element={<LoginPage />} />
+      <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
-      <Route path="/team"   element={<TeamPage />} />
-      <Route path="/"       element={<BoardView />} />
-      <Route path="*"       element={<Navigate to="/" replace />} />
+      <Route path="/team" element={<TeamPage />} />
+      <Route path="/" element={<BoardView />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
