@@ -1,6 +1,6 @@
-# TaskFlow (Trello Clone)
+# Project management platform : Taskflow
 
-TaskFlow is a full-stack, comprehensive Trello-style Kanban board application designed for seamless task management, team collaboration, and project tracking. It features a modern, responsive user interface and a robust backend to handle real-time data efficiently.
+TaskFlow is a full-stack, comprehensive Project management platform : Taskflow designed for seamless task management, team collaboration, and project tracking. It features a modern, responsive user interface and a robust backend to handle real-time data efficiently.
 
 ## 🚀 Key Features
 
