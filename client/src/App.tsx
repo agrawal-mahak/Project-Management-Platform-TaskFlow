@@ -84,13 +84,25 @@ const BoardView = () => {
   );
 };
 
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const user = getUserFromStorage();
+  if (!user) return <Navigate to="/login" replace />;
+  return <>{children}</>;
+};
+
+const PublicRoute = ({ children }: { children: React.ReactNode }) => {
+  const user = getUserFromStorage();
+  if (user) return <Navigate to="/" replace />;
+  return <>{children}</>;
+};
+
 function App() {
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/team" element={<TeamPage />} />
-      <Route path="/" element={<BoardView />} />
+      <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+      <Route path="/signup" element={<PublicRoute><SignupPage /></PublicRoute>} />
+      <Route path="/team" element={<ProtectedRoute><TeamPage /></ProtectedRoute>} />
+      <Route path="/" element={<ProtectedRoute><BoardView /></ProtectedRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
