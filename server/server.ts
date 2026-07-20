@@ -11,8 +11,12 @@ connectDB();
 
 const app = express();
 
+// app.use(cors({
+//     origin: "http://localhost:5173",
+// }));
+
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://project-management-platform-taskflow-4b4i.onrender.com/",
 }));
 
 // Middleware
