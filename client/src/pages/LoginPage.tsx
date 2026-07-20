@@ -73,7 +73,7 @@ const LoginPage = () => {
 
           {/* SSO Buttons */}
           <div className="auth-sso-buttons">
-            <GoogleLoginButton mode="signin" showMicrosoft />
+            <GoogleLoginButton mode="signin" />
           </div>
 
           {/* Divider */}

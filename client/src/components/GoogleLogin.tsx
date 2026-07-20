@@ -6,10 +6,9 @@ import { googleLogin } from '../api/authApi';
 interface Props {
     mode?: 'signin' | 'signup';
     label?: string;             // custom button text
-    showMicrosoft?: boolean;    // optionally show the Microsoft placeholder too
 }
 
-const GoogleLoginButton = ({ mode = 'signin', label = 'Google', showMicrosoft = false }: Props) => {
+const GoogleLoginButton = ({ mode = 'signin', label = 'Google' }: Props) => {
     const navigate = useNavigate();
 
     // useGoogleLogin returns a trigger function — call it on any button click
@@ -47,23 +46,6 @@ const GoogleLoginButton = ({ mode = 'signin', label = 'Google', showMicrosoft = 
                 {label}
             </button>
 
-            {/* ── Optional Microsoft placeholder ── */}
-            {/* {showMicrosoft && (
-        <button
-          id="login-microsoft-btn"
-          className="auth-sso-btn"
-          type="button"
-          onClick={() => toast.error('Microsoft login not implemented yet')}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24">
-            <rect x="1"  y="1"  width="10" height="10" fill="#F25022"/>
-            <rect x="13" y="1"  width="10" height="10" fill="#7FBA00"/>
-            <rect x="1"  y="13" width="10" height="10" fill="#00A4EF"/>
-            <rect x="13" y="13" width="10" height="10" fill="#FFB900"/>
-          </svg>
-          Microsoft
-        </button>
-      )} */}
         </div>
     );
 };
