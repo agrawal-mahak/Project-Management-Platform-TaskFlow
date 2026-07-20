@@ -1,0 +1,1 @@
+fetch('https://project-management-platform-taskflow-4b4i.onrender.com/assets/index-BYXQJSZT.js').then(res => { console.log(res.status); return res.text(); }).then(t => console.log(t.substring(0, 100)));
