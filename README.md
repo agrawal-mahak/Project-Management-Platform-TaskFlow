@@ -5,7 +5,7 @@ TaskFlow is a full-stack, comprehensive Project management platform : Taskflow d
 ## 🚀 Key Features
 
 * **Kanban Board Interface**: Visualize workflows with drag-and-drop capability using `@hello-pangea/dnd` for cards and lists.
-* **Task Management**: Create, edit, and delete tasks. Detailed task modals powered by `react-hook-form` allow for rich information input including descriptions, priority levels, and assignments.
+* **Task Management**: Create, edit, and delete tasks. Detailed task modals powered by `react-hook-form` allow for rich information input including descriptions, priority levels, and assignments
 * **Role-Based Authentication**: Secure user login and registration with distinct roles (Admin, Manager, User) controlling access to various features.
 * **Real-time State Updates**: Seamless synchronization between the frontend and the MongoDB backend ensures data consistency across CRUD operations.
 * **Dynamic User Assignment**: Assign tasks to specific team members using live data populated from the backend.
